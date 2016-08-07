@@ -34,41 +34,21 @@ function tt_rss_get_headline(sid, feed_id, limit, cb) {
 ////////////////////////////////////////////////////////////
 
 
-
-function write_fresh_entries( data ) {
-	const entries = data.content;
-	const titles = entries.map(function(e){return	e.title} )
-	$("p#fresh").html(titles.join("<br>\n"));
+function write_entries (id) {
+	return function ( data ) {
+		const entries = data.content;
+		const titles = entries.map(function(e){return	e.title} )
+		$("p#" + id).html(titles.join("<br>\n"));
+	}
 }
-
-function write_google_news_une_entries( data ) {
-	const entries = data.content;
-	const titles = entries.map(function(e){return	e.title} )
-	$("p#google_news_une").html(titles.join("<br>\n"));
-}
-
-function write_google_sci_tech_entries( data ) {
-	const entries = data.content;
-	const titles = entries.map(function(e){return	e.title} )
-	$("p#google_sci_tech").html(titles.join("<br>\n"));
-}
-
-function write_hn_entries( data ) {
-	const entries = data.content;
-	const titles = entries.map(function(e){return	e.title} )
-	$("p#hn").html(titles.join("<br>\n"));
-}
-
-
-
 
 tt_rss_query("login", {"user":"florent","password":"celia82"}, 
 	function ( data ) {
 		const sid = data.content.session_id;
-		tt_rss_get_headline (sid, -3, 30, write_fresh_entries);
-		tt_rss_get_headline (sid, "299", 10, write_google_news_une_entries);
-		tt_rss_get_headline (sid, "300", 10, write_google_sci_tech_entries);
-		tt_rss_get_headline (sid, "302", 10, write_hn_entries);
+		tt_rss_get_headline (sid, -3, 30, write_entries("fresh"));
+		tt_rss_get_headline (sid, "299", 10, write_entries("google_news_une"));
+		tt_rss_get_headline (sid, "300", 10, write_entries("google_sci_tech"));
+		tt_rss_get_headline (sid, "302", 10, write_entries("hn"));
 	}
 )
 
