@@ -29,16 +29,81 @@ function tt_rss_id_query(op,sid,cb) {
 function tt_rss_get_headline(sid, feed_id, limit, cb) {
 	return tt_rss_id_query_params( "getHeadlines", sid, {"feed_id" : feed_id, "limit" : limit} , cb );
 }
+
+function tt_rss_get_categories(sid, cb) {
+	return tt_rss_id_query("getCategories", sid, cb);
+}
+
+function tt_rss_get_feeds_from_cat_id(sid, cat_id, cb) {
+	return tt_rss_id_query_params("getFeeds", sid, {"cat_id" : cat_id} , cb);
+}
+
 //
 // END OF API
 ////////////////////////////////////////////////////////////
 
 
+function get_feeds_from_cat_id (sid, cb) {
+
+	return tt_rss_get_categories(sid, 
+		function (data) {
+			const cats = data.content;
+			const highlight_feed = cats.filter(function (cat) {return (cat.title == "Highlight") } );
+			const highlight_id = highlight_feed[0].id;
+			tt_rss_get_feeds_from_cat_id(sid, highlight_id, cb)
+		}
+	);
+
+}
+
+function filter_feed_entry (e) {
+	if (e.link.startsWith("http://news.google.com")){
+		//console.log("feed title : " + e.feed_title);
+		const begin = e.title.lastIndexOf(" - ");
+		const end = e.title.length - 1;
+		return {"title" : e.title.substr(0, begin), 
+				"source" : e.title.substr(begin + 3, end), 
+				"link" : e.link
+		};
+	}
+	return {"title" : e.title, 
+			"source" : e.feed_title, 
+			"link" : e.link
+	};
+}
+
+function entry_to_html () {
+	return function(entry){
+		const e = filter_feed_entry(entry);
+		return	'\r<li><a target="_blank" href="' + e.link +'">' + e.title + '</a>'
+				+'<br>\n'
+				+'\r<small>' + e.source + '</small>\n' 
+				+'\r</li>\n'; 
+	} 
+}
+
 function write_entries (id) {
 	return function ( data ) {
 		const entries = data.content;
-		const titles = entries.map(function(e){return	e.title} )
-		$("p#" + id).html(titles.join("<br>\n"));
+		const html_entries = entries.map(entry_to_html());
+		$("p#" + id).html("<ul>\n" + html_entries.join("\n") + "</ul>");
+	}
+}
+
+function write_highlight_entries (sid) {
+
+	return function ( data ) {
+		const feeds = data.content;
+		const html_titles = feeds.map(function (f, i) { 
+			return "<h2>" + f.title + '</h2>\n<p id="hl'+ i +'">Chargement ...</p>';
+		} ).join('\n');
+
+		$("div#highlight").html(html_titles);
+
+		feeds.forEach(function (f, i) { 
+			const id = f.id;
+			tt_rss_get_headline (sid, id, 10, write_entries("hl"+i));
+		})	;
 	}
 }
 
@@ -46,9 +111,7 @@ tt_rss_query("login", {"user":"florent","password":"celia82"},
 	function ( data ) {
 		const sid = data.content.session_id;
 		tt_rss_get_headline (sid, -3, 30, write_entries("fresh"));
-		tt_rss_get_headline (sid, "299", 10, write_entries("google_news_une"));
-		tt_rss_get_headline (sid, "300", 10, write_entries("google_sci_tech"));
-		tt_rss_get_headline (sid, "302", 10, write_entries("hn"));
+		get_feeds_from_cat_id(sid, write_highlight_entries(sid));
 	}
 )
 
@@ -56,17 +119,13 @@ tt_rss_query("login", {"user":"florent","password":"celia82"},
 </script>
 </head>
 <body>
-<h2>Feed</h2>
-<p id="fresh">Chargement ...</p>
 
-<h2>À la Une</h2>
-<p id="google_news_une">Chargement ...</p>
+<div id="feed">
+	<h2>Feed</h2>
+	<p id="fresh">Chargement ...</p>
+</div>
 
-<h2>Science/High-tech</h2>
-<p id="google_sci_tech">Chargement ...</p>
-
-<h2>Hacker news</h2>
-<p id="hn">Chargement ...</p>
+<div id="highlight"><p>Chargement ...</p></div>
 
 </body>
 </html>
