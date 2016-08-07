@@ -1,0 +1,92 @@
+<html>
+<head>
+<script src="https://code.jquery.com/jquery-3.1.0.js"></script>
+
+<script>
+
+////////////////////////////////////////////////////////////
+// API
+function tt_rss_query(op,params,cb) {
+	const data = JSON.stringify($.extend({"op" : op},params));
+	console.log("Query " + data);
+	return $.post(
+		"http://serveur.kaisser.name/tt-rss/api/",
+		data,
+		cb,
+		"json"
+	);
+}
+
+function tt_rss_id_query_params(op,sid,ext_params,cb) {
+	const params = $.extend({"sid" : sid},ext_params);
+	return tt_rss_query (op, params,cb);
+}
+
+function tt_rss_id_query(op,sid,cb) {
+	return tt_rss_id_query_params (op, sid, {}, cb);
+}
+
+function tt_rss_get_headline(sid, feed_id, limit, cb) {
+	return tt_rss_id_query_params( "getHeadlines", sid, {"feed_id" : feed_id, "limit" : limit} , cb );
+}
+//
+// END OF API
+////////////////////////////////////////////////////////////
+
+
+
+function write_fresh_entries( data ) {
+	const entries = data.content;
+	const titles = entries.map(function(e){return	e.title} )
+	$("p#fresh").html(titles.join("<br>\n"));
+}
+
+function write_google_news_une_entries( data ) {
+	const entries = data.content;
+	const titles = entries.map(function(e){return	e.title} )
+	$("p#google_news_une").html(titles.join("<br>\n"));
+}
+
+function write_google_sci_tech_entries( data ) {
+	const entries = data.content;
+	const titles = entries.map(function(e){return	e.title} )
+	$("p#google_sci_tech").html(titles.join("<br>\n"));
+}
+
+function write_hn_entries( data ) {
+	const entries = data.content;
+	const titles = entries.map(function(e){return	e.title} )
+	$("p#hn").html(titles.join("<br>\n"));
+}
+
+
+
+
+tt_rss_query("login", {"user":"florent","password":"celia82"}, 
+	function ( data ) {
+		const sid = data.content.session_id;
+		tt_rss_get_headline (sid, -3, 30, write_fresh_entries);
+		tt_rss_get_headline (sid, "299", 10, write_google_news_une_entries);
+		tt_rss_get_headline (sid, "300", 10, write_google_sci_tech_entries);
+		tt_rss_get_headline (sid, "302", 10, write_hn_entries);
+	}
+)
+
+
+</script>
+</head>
+<body>
+<h2>Feed</h2>
+<p id="fresh">Chargement ...</p>
+
+<h2>À la Une</h2>
+<p id="google_news_une">Chargement ...</p>
+
+<h2>Science/High-tech</h2>
+<p id="google_sci_tech">Chargement ...</p>
+
+<h2>Hacker news</h2>
+<p id="hn">Chargement ...</p>
+
+</body>
+</html>
