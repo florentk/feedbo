@@ -1,0 +1,26 @@
+div#main {
+
+	margin: 0px;
+}
+
+li#feed {
+	margin: 2px;
+    width: 580px;
+    float:left;
+}
+
+li#highlight {
+	margin: 2px;
+    width: 400px;
+    float:left;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0px;
+    margin: 15px auto;
+}
+
+li {
+	margin-bottom: 7px;
+}

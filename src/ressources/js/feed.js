@@ -8,7 +8,7 @@ function write_entries (id, show_source) {
 		const entries = data.content;
 		const html_entries = entries.map(entry_to_html(show_source));
 		const d = new Date();
-		$("p#" + id).html("<small>"+d.toString()+"</small><ul>\n" + html_entries.join("\n") + "</ul>");
+		$("div#" + id).html(html_entries.join("\n") + "<small>"+d.toString()+"</small>\n");
 	}
 }
 
@@ -28,10 +28,10 @@ function write_highlight_entries (sid) {
 	return function ( data ) {
 		const feeds = data.content;
 		const html_titles = feeds.map(function (f, i) { 
-			return "<h2>" + f.title + '</h2>\n<p id="hl'+ i +'">Chargement ...</p>';
+			return "<ul><h2>" + f.title + '</h2>\n<div id="hl'+ i +'" ><p>Chargement ...</p></div></ul>';
 		} ).join('\n');
 
-		$("div#highlight").html(html_titles);
+		$("li#highlight").html(html_titles);
 
 		feeds.forEach(function (f, i) { 
 			const feed_id = f.id;
