@@ -1,6 +1,10 @@
+const UPDATE_INTERVAL = 30000;
+const NB_HIGHLIGHT_ENTRY = 10;
+const NB_FRESH_ENTRY = 40;
+
 function auto_update (f) {
 	f.call();
-	setInterval(f, 30000);
+	setInterval(f, UPDATE_INTERVAL);
 }
 
 function write_entries (id, show_source) {
@@ -14,13 +18,13 @@ function write_entries (id, show_source) {
 
 function load_highlight_feeds(sid,feed_id,div_id) {
 	return function () {
-		tt_rss_get_headline (sid, feed_id, 10, write_entries(div_id, false));
+		tt_rss_get_headline (sid, feed_id, NB_HIGHLIGHT_ENTRY, write_entries(div_id, false));
 	}
 }
 
 function load_fresh_feeds (sid) {
 	return function () {
-		tt_rss_get_headline (sid, -3, 30, write_entries("fresh", true));
+		tt_rss_get_headline (sid, -3, NB_FRESH_ENTRY, write_entries("fresh", true));
 	}
 }
 
