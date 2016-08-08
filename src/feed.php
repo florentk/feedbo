@@ -10,6 +10,7 @@
 	<meta http-equiv="Cache-control" content="no-cache">
 	<script src="ressources/js/jquery.js"></script>
 	<script src="ressources/js/tt-rss.js?t=<?=$t?>"></script>
+	<script src="ressources/js/format_entry.js?t=<?=$t?>"></script>	
 	<script src="ressources/js/feed.js?t=<?=$t?>"></script>
 </head>
 <body onload='login("<?=$user?>","<?=$password?>");'>
