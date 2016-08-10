@@ -61,6 +61,7 @@ function init_highlight_feeds (sid) {
 function login(user, password){
 	return tt_rss_query("login", {"user":user,"password":password}, 
 		function ( data ) {
+			console.log(data.content);
 			const sid = data.content.session_id;
 			init_highlight_feeds(sid);
 			auto_update(load_fresh_feeds(sid));
