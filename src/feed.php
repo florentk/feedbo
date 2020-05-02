@@ -15,14 +15,13 @@
 	<script src="ressources/js/feed.js?t=<?=$t?>"></script>
 	<link rel="stylesheet" href="ressources/css/main.css">
 </head>
-<body onload='login("<?=$user?>","<?=$password?>");'>
+<body onload='onload("<?=$user?>","<?=$password?>");'>
 	<ul id="main">
 		<li id="highlight"><p>Chargement ...</p></li>
 		<li id="feed">
-			<ul>
 				<h2>Feeds</h2>
-				<div id="fresh"><p>Chargement ...</p></li>
-			</ul>
+				<div id="fresh"><p>Chargement ...</p></div>
+				<a id="more" href=""> More items </a>
 		</li>
 	</ul>
 </body>

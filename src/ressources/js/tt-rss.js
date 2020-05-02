@@ -18,8 +18,8 @@ function tt_rss_id_query(op,sid,cb) {
 	return tt_rss_id_query_params (op, sid, {}, cb);
 }
 
-function tt_rss_get_headline(sid, feed_id, limit, cb) {
-	return tt_rss_id_query_params( "getHeadlines", sid, {"feed_id" : feed_id, "limit" : limit} , cb );
+function tt_rss_get_headline(sid, feed_id, limit, skip, cb) {
+	return tt_rss_id_query_params( "getHeadlines", sid, {"feed_id" : feed_id, "limit" : limit, "skip" : skip} , cb );
 }
 
 function tt_rss_get_categories(sid, cb) {
