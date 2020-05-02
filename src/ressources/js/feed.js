@@ -45,7 +45,7 @@ function write_highlight_entries (sid) {
 	return function ( data ) {
 		const feeds = data.content;
 		const html_titles = feeds.map(function (f, i) { 
-			return '<ul><h2><a href="' + extract_site(f.feed_url) + '">'  + f.title + '</a></h2>\n<div id="hl'+ i +'" ><p>Chargement ...</p></div></ul>';
+			return '<ul><h2><a href="' + extract_site(f.feed_url) + '" target="_blank">'  + f.title + '</a></h2>\n<div id="hl'+ i +'" ><p>Chargement ...</p></div></ul>';
 		} ).join('\n');
 
 		$("li#highlight").html(html_titles);
