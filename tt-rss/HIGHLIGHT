@@ -1,0 +1,6 @@
+use hightlight category when you add the feed
+change the value of update_method at 258 in table feeds for the new entry
+you can also change the order with order_id
+
+
+use TT-Rss 1.8
