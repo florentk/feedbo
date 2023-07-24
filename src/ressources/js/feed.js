@@ -36,7 +36,7 @@ function append_entries (id, show_source) {
 
 function load_highlight_feeds(sid,feed_id,div_id) {
 	return function () {
-		tt_rss_get_headline (sid, feed_id, NB_HIGHLIGHT_ENTRY, 0,write_entries(div_id, false));
+		tt_rss_get_headline (sid, feed_id, NB_HIGHLIGHT_ENTRY, 0, "none", write_entries(div_id, false));
 	}
 }
 
@@ -76,23 +76,23 @@ function init_highlight_feeds (sid) {
 
 function load_fresh_feeds (sid, nb) {
 	return function () {
-		tt_rss_get_headline (sid, FEED_ID_FRESH_ENTRY, nb, 0 ,write_entries("fresh", true));
+		tt_rss_get_headline (sid, FEED_ID_FRESH_ENTRY, nb, 0, "feed_dates", write_entries("fresh", true));
 	}
 }
 
 function update_more(sid,skip,auto_update_id) {
 	$("a#more").attr("href", 'javascript:more("' + sid + '",'+ skip + ',' +  auto_update_id + ');');
-	
-	
+
 	$( window ).scroll(function(e) {
 		const height = e.currentTarget.document.body.scrollHeight;
 		const pos = e.currentTarget.scrollY + e.currentTarget.innerHeight;
 		const rate =  pos / height;
-		if ( rate == 1 ) {
+		//console.log("scroll : " + " rate " + rate + " scrollHeight " + e.currentTarget.document.body.scrollHeight + " scrollY " + e.currentTarget.scrollY + " innerHeight " + e.currentTarget.innerHeight);
+		if ( rate > 0.9 ) {
 			more(sid,skip,auto_update_id);
 			$(this).unbind(e);
 		}
-	})	
+	})
 }
 
 function init_fresh_entry (sid,nbFreshEntry) {
@@ -104,7 +104,7 @@ function init_fresh_entry (sid,nbFreshEntry) {
 function more(sid,skip,auto_update_id) {
 	//append additionnal entries
 	const newNbFreshEntry = skip+MORE_NB_FRESH_ENTRY;
-	tt_rss_get_headline (sid, FEED_ID_FRESH_ENTRY, MORE_NB_FRESH_ENTRY, skip ,append_entries("fresh", true));
+	tt_rss_get_headline (sid, FEED_ID_FRESH_ENTRY, MORE_NB_FRESH_ENTRY, skip, "feed_dates", append_entries("fresh", true));
 	
 	//update auto-update
 	clearInterval(auto_update_id);
