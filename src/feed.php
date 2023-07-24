@@ -1,6 +1,11 @@
 <?php
-	$user = $_POST["user"];
-	$password = $_POST["password"];
+	include 'config.php';
+
+	if ((strlen($key) < 12) or ($key <> $_GET["key"])){
+		$user = $_POST["user"];
+		$password = $_POST["password"];
+	}
+
 	$t = time();
 ?>
 
