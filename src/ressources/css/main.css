@@ -30,13 +30,13 @@ div#main {
 
 li#feed {
 	margin: 2px;
-    width: 570px;
+    width: 800px;
     float:left;
 }
 
 li#highlight {
 	margin: 2px;
-    width: 400px;
+    width: 570px;
     float:left;
 }
 
@@ -44,4 +44,27 @@ ul {
     list-style-type: none;
     padding: 0px;
     margin-right: 15px;
+}
+
+@media (max-width: 300px) {
+
+
+    body {
+	    font-size: 12px;
+    }
+
+    h2, h2 a {
+	    font-size: 14px;
+    }
+
+
+
+    li#feed {
+        width: 230px;
+    }
+
+    li#highlight {
+        width: 230px;
+    }
+
 }
