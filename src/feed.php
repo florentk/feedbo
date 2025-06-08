@@ -18,7 +18,9 @@
 	<script src="ressources/js/tt-rss.js?t=<?=$t?>"></script>
 	<script src="ressources/js/format_entry.js?t=<?=$t?>"></script>	
 	<script src="ressources/js/feed.js?t=<?=$t?>"></script>
-	<link rel="stylesheet" href="ressources/css/main.css">
+	<?php if ($_GET["css"] <> "no"): ?>
+		<link rel="stylesheet" href="ressources/css/main.css">
+	<?php endif; ?>
 </head>
 <body onload='onload("<?=$user?>","<?=$password?>");'>
 	<ul id="main">
